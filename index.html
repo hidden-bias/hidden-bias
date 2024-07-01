@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script>
+    !(function(){
+      var url = window.location.href
+      if (url.split('#')[0].split('?')[0].slice(-1) != '/' && !url.includes('.html')) window.location = url + '/'
+    })()
+  </script>
+
+  <title>Hidden Bias</title>
+  <meta name="og:description" content="Models trained on real-world data can encode real-world bias. Hiding information about protected classes doesn't always fix things — sometimes it can even hurt.">
+  <meta property="og:image" content="https://pair.withgoogle.com/explorables/images/hidden-bias.png">
+  <meta name="twitter:card" content="summary_large_image">
+  
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,500,700|Roboto:700,500,300' rel='stylesheet' type='text/css'>  
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700" rel="stylesheet">
+
+	<meta name="viewport" content="width=device-width">
+</head>
+<body>
+  <div class='header'>
+    <div class='header-left'>
+    </div>
+  </div>
+  
+  <h1 class='headline'>Hidden Bias</h1>
+  <div class="post-summary">Models trained on real-world data can encode real-world bias. Hiding information about protected classes doesn't always fix things — sometimes it can even hurt.</div>
+  <link rel="stylesheet" href="style_new.css">
+
+<div id='container' class='container-1'>
+<div id='graph'></div>
+<div id='sections'>
+
+
+<div>
+<h3>Modeling College GPA</h3>
+
+<p>Let's pretend we're college admissions officers trying to predict the GPA students will have in college (in these examples we'll use simulated data).
+
+<p>One simple approach: predict that students will have the same GPA in college as they did in high school. 
+</div>
+
+
+<div class='img-slide'>
+<p>This is at best a very rough approximation, and it misses a key feature of this data set: students usually have better grades in high school than in college
+
+<p>We're <img src='over.png'><span class='xhighlight blue'>over-predicting</span> college grades more often than we <img src='over.png'><span class='xhighlight orange'>under-predict.</span>
+</div>
+
+
+<div>
+<h3>Predicting with ML</h3>
+<p>If we switched to using a machine learning model and entered these student grades, it would recognize this pattern and adjust the prediction.
+
+<p>The model does this without knowing anything about the real-life context of grading in high school versus college.
+</div>
+
+
+<div>
+<p>Giving the model <span class='highlight blue'>more information</span> about students increases accuracy more...
+</div>
+
+
+<div>
+<p>...and more.
+</div>
+
+
+<div>
+<h3>Models can encode previous bias</h3>
+<p>All of this sensitive information about students is just a long list of numbers to model. 
+
+<p>If a sexist college culture has historically led to lower grades for <span class='f circle'>&nbsp;</span> female students, the model will pick up on that correlation and predict lower grades for women.  
+
+<p>Training on historical data bakes in historical biases. Here the sexist culture has improved, but the model learned from the past correlation and still predicts higher grades for <span class='m circle'>&nbsp;</span> men.
+</div>
+
+<div>
+<h3>Hiding protected classes from the model might not stop discrimination</h3>
+
+<p>Even if we don't tell the model students' genders, it might still score <span class='f circle'>&nbsp;</span> female students poorly.
+
+<p>With detailed enough information about every student, the model can still synthesize a proxy for gender out of other <span class='highlight yellow'>variables.</span>
+</div>
+
+
+<div>
+<h3>Including a protected attribute may even <i>decrease</i> discrimination</h3>
+
+<p>Let's look at a simplified model, one only taking into account the recommendation of an alumni interviewer. 
+</div>
+
+
+<div>
+<p>The interviewer is quite accurate, except that they're biased against students with a <span class='l circle'>&nbsp;</span> low household income. 
+
+<p>In our toy model, students' grades don't depend on their income once they're in college. In other words, we have biased inputs and unbiased outcomes—the opposite of the previous example, where the inputs weren't biased, but the toxic culture biased the outcomes. 
+</div>
+
+
+<div>
+<p>If we also tell the model each student's <span class='highlight blue'>household income</span>, it will naturally correct for the interviewer's overrating of <span class='h circle'>&nbsp;</span> high-income students just like it corrected for the difference between high school and college GPAs. 
+
+<p>By carefully considering and accounting for bias, we've made the model fairer and more accurate. This isn't always easy to do, especially in circumstances like the historically toxic college culture where unbiased data is limited. 
+
+<p><br>
+
+
+<br><br>
+
+
+</div>
+
+</div>
+</div>
+<div id='end'></div>
+
+
+<link rel="stylesheet" href="graph-scroll.css">
+
+<script src="./third_party/seedrandom.min.js"></script>
+<script src='./third_party/d3_.js'></script>
+<script src='./third_party/swoopy-drag.js'></script>
+<script src='./third_party/misc.js'></script>
+<script src='annotations.js'></script>
+<script src='script.js'></script>
+</body>
+
+
+<script>
+  // Tweaks for displaying in an iframe
+  if (window !== window.parent){
+    
+    // Open links in a new tab
+    Array.from(document.querySelectorAll('a'))
+      .forEach(e => {
+        // skip anchor links
+        if (e.href && e.href[0] == '#') return
+
+        e.setAttribute('target', '_blank')
+        e.setAttribute('rel', 'noopener noreferrer')
+      })
+
+    // Remove recirc h3
+    Array.from(document.querySelectorAll('h3'))
+      .forEach(e => {
+        if (e.textContent != 'More Explorables') return
+
+        e.parentNode.removeChild(e)
+      })
+
+    // Remove recirc container
+    var recircEl = document.querySelector('#recirc')
+    recircEl.parentNode.removeChild(recircEl)
+  }
+</script>
+
+</html>
